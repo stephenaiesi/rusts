@@ -1,0 +1,48 @@
+{
+	"compilerOptions": {
+		/* Compiler Options */
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"skipLibCheck": true,
+		"esModuleInterop": false,
+		"lib": ["ESNext"],
+
+		/* Build Options */
+		"noEmit": true,
+		"isolatedModules": true,
+
+		/* Module Resolution Options */
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+
+		/* Enforce Strict Type Checking */
+		"strict": true,
+		"alwaysStrict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true,
+		"strictPropertyInitialization": true,
+		"noImplicitThis": true,
+		"exactOptionalPropertyTypes": false,
+
+		/* Other Safeguards */
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+
+		/* Experimental */
+		"experimentalDecorators": true
+	}
+}

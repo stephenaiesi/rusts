@@ -1,0 +1,8 @@
+{
+    // Reccomended extensions:
+    "recommendations": [
+        "biomejs.biome",
+        "YoavBls.pretty-ts-errors",
+        "zardoy.ts-essential-plugins",
+    ]
+}
