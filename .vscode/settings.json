@@ -1,19 +1,25 @@
 {
-  "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.patterns": {
-    "package.json": "*"
-  },
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"package.json": "*"
+	},
 
-  // "editor.defaultFormatter": "biomejs.biome",
-  "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "editor.formatOnSave": true,
-  "editor.quickSuggestions": {
-    "strings": true
-  },
+	// "editor.defaultFormatter": "biomejs.biome",
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"editor.formatOnSave": true,
+	"editor.quickSuggestions": {
+		"strings": true
+	}
 
+	// "vitest.rootConfig": "/Users/augustwest/Code/Projects/rusts/tests/vitest.config.ts"
+	// "vitest.workspaceConfig": "",
+	// "vitest.filesWatcherInclude": "**/*.spec.ts"
+	// "vitest.cliArguments": "",
+	// "vitest.shellType": "child_process",
+	// "vitest.vitestPackagePath": "${workspaceFolder}/node_modules/vitest/package.json"
 }
