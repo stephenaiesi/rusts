@@ -7,9 +7,23 @@
 	"author": "Stephen Aiesi <stephenaiesi@gmail.com>",
 	"license": "isc",
 	"type": "module",
+	"files": ["dist"],
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"files": ["dist"],
+	"exports": {
+		".": {
+			"main": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		},
+		"./compare": {
+			"main": "./dist/cmp/index.js",
+			"types": "./dist/cmp/index.d.ts"
+		},
+		"./option": {
+			"main": "./dist/option/index.js",
+			"types": "./dist/option/index.d.ts"
+		}
+	},
 	"scripts": {
 		"clean": "rimraf ./dist",
 		"format": "npx biome format src tests",
@@ -22,16 +36,18 @@
 		"typecheck": "npx tsc -p ./src/tsconfig.json --noEmit",
 		"attw": "npx attw --pack . --profile esm-only",
 		"check": "npx concurrently npm:biome npm:typecheck npm:attw",
-		"vitest": "npx vitest -c ./tests/vitest.config.ts --coverage",
+		"vitest": "npx vitest --coverage",
 		"test": "npm run vitest -- --run",
 		"test:unit": "npm run test -- tests/**/*.spec.ts",
 		"test:func": "npm run test -- tests/**/*.test.ts",
 		"build:ts": "npx tsc -p src/tsconfig.json",
-		"build:docs": "npx typedoc",
 		"build": "npx concurrently 'npm:build:*'",
 		"watch:ts": "npx tsc -p src/tsconfig.dev.json --watch",
 		"watch:tests": "npm run vitest -- --watch --ui",
-		"dev": "npm run clean && npx concurrently 'npm:watch:*'"
+		"docs:build": "npx typedoc",
+		"docs:watch": "npm run docs:build -- --watch",
+		"dev": "npm run clean && npx concurrently 'npm:watch:*'",
+		"dev:docs": "npx concurrently 'npm:watch:ts' 'npm:docs:watch'"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.17.3",
