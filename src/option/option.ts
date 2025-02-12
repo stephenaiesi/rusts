@@ -98,7 +98,7 @@ abstract class OptionBase<T> implements Comparable<Option<T>> {
 	 ******************************************************************/
 	abstract cmp(this: Option<T>, other: Option<T>): Ordering;
 
-	eq(this: Option<T>, other: Option<T>): boolean {
+	eq<U>(this: Option<U>, other: Option<U>): boolean {
 		return this.cmp(other) === Ordering.Equal;
 	}
 
