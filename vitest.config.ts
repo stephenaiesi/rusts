@@ -14,7 +14,7 @@ export default defineConfig({
 			include: ["src/option/**/*.ts"],
 			// include: ["src/**/*.ts"],
 
-			exclude: ["src/cli/run.ts"],
+			exclude: ["src/**/types/**/*.ts", "src/**/types.ts"],
 
 			thresholds: {
 				lines: 100,
