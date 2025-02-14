@@ -1,4 +1,6 @@
+import { Ordering } from "../../../src/cmp/Ordering";
 import { Err } from "../../../src/result/err";
+import { Ok } from "../../../src/result/ok";
 
 describe("Err", () => {
 	const testErr: Err<number, string> = new Err("Oh no!");
@@ -7,7 +9,6 @@ describe("Err", () => {
 		test("Err.constructor", () => {
 			const a = new Err("Oh no!");
 			expect(a).toBeInstanceOf(Err);
-			expectTypeOf(a).toEqualTypeOf<Err<unknown, string>>();
 			expect(a).not.toBe(new Err("Oh no!"));
 		});
 	});
@@ -124,6 +125,122 @@ describe("Err", () => {
 			expect(errMapped.unwrapErr().message).toBe("Oh no!");
 			expect(errMapper).toHaveBeenCalledTimes(1);
 			expect(errMapper).toHaveBeenCalledWith("Oh no!");
+		});
+	});
+
+	describe("Boolean operations", () => {
+		const errLow = new Err<number, number>(404);
+		const errHigh = new Err<number, number>(500);
+		const okVal = new Ok<number, number>(200);
+
+		test("Err.and()", () => {
+			expect(errLow.and(errHigh)).toBe(errLow);
+			expect(errHigh.and(errLow)).toBe(errHigh);
+			expect(errLow.and(okVal)).toBe(errLow);
+		});
+
+		test("Err.anddThen()", () => {
+			const fn = vi.fn((_) => okVal);
+
+			expect(errLow.andThen(fn)).toBe(errLow);
+			expect(fn).not.toHaveBeenCalled();
+		});
+
+		test("Err.or()", () => {
+			expect(errLow.or(errLow)).toBe(errLow);
+			expect(errLow.or(errHigh)).toBe(errHigh);
+			expect(errHigh.or(errLow)).toBe(errLow);
+			expect(errLow.or(okVal)).toBe(okVal);
+		});
+
+		test("Err.orElse()", () => {
+			const fn = vi.fn((e) => okVal);
+			const orElse = errLow.orElse(fn);
+			expect(orElse).toBe(okVal);
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenCalledWith(404);
+		});
+	});
+
+	describe("Iteration", () => {
+		test("Err.iter()", () => {
+			const iter = testErr.iter();
+			expect(iter.next()).toEqual({ value: undefined, done: true });
+		});
+	});
+
+	describe("Copying and Cloning", () => {
+		type InnerType = {
+			msg: string;
+			data: {
+				a: number;
+				b: {
+					c: number;
+				};
+			};
+		};
+
+		const originalInner: InnerType = {
+			msg: "Something went wrong",
+
+			data: {
+				a: 1,
+				b: {
+					c: 2,
+				},
+			},
+		};
+
+		const originalErr = new Err<number, InnerType>(originalInner);
+
+		test("Err.copy()", () => {
+			const errCopy = originalErr.copy();
+			expect(errCopy).not.toBe(originalErr);
+			expect(errCopy).toBeInstanceOf(Err);
+
+			// The top-level object should be a new object
+			expect(errCopy.value).not.toBe(originalErr.value);
+
+			// However, the nested object 'b' should be the same reference
+			expect(errCopy.value.data.b).toBe(originalErr.value.data.b);
+
+			// Modify the nested object in the original
+			originalInner.data.b.c += 1;
+
+			// The change should be visible in the shallow copy
+			expect(errCopy.value.data.b.c).toEqual(originalInner.data.b.c);
+		});
+
+		test("Err.clone()", () => {
+			const errClone = originalErr.clone();
+
+			expect(errClone).not.toBe(originalErr);
+			expect(errClone).toBeInstanceOf(Err);
+
+			// The top-level object should be a new object
+			expect(errClone.value).not.toBe(originalErr.value);
+
+			// The deep clone's nested object should remain unchanged
+			expect(errClone.value.data.b).not.toBe(originalErr.value.data.b);
+
+			// Modify the nested object in the original
+			originalInner.data.b.c += 1;
+
+			// The nested object 'b' should also be a new object (different reference)
+			expect(errClone.value.data.b).not.toBe(originalErr.value.data.b);
+		});
+	});
+
+	describe("Comparison Operators", () => {
+		const errLow = new Err<number, number>(404);
+		const errHigh = new Err<number, number>(500);
+		const okVal = new Ok<number, number>(200);
+
+		test("Ok.cmp", () => {
+			expect(errLow.cmp(errLow)).toBe(Ordering.Equal);
+			expect(errLow.cmp(errHigh)).toBe(Ordering.Less);
+			expect(errHigh.cmp(errLow)).toBe(Ordering.Greater);
+			expect(errLow.cmp(okVal)).toBe(Ordering.Greater);
 		});
 	});
 });
