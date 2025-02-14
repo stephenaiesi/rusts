@@ -19,7 +19,7 @@ abstract class OptionBase<T> implements Comparable<Option<T>> {
 
 	// inspect() is named peek() to avoid conflict with the test runner
 	// TODO: possibly find a way to name this inspect()
-	abstract peek(fn: (t?: T) => void): this;
+	abstract peek(fn: (t: T) => void): this;
 
 	// TODO: slice implementation?
 

@@ -55,7 +55,7 @@ describe("None", () => {
 			const cb = vi.fn(() => {});
 
 			expect(n.peek(cb)).toBe(n);
-			expect(cb).toHaveBeenCalledOnce();
+			expect(cb).not.toHaveBeenCalled();
 		});
 	});
 

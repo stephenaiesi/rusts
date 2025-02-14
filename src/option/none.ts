@@ -45,8 +45,7 @@ class None<T = never> extends OptionBase<T> {
 		return fn();
 	}
 
-	peek(fn: () => void): this {
-		fn();
+	peek(_fn: (t: T) => void): this {
 		return this;
 	}
 
