@@ -1,8 +1,9 @@
 import Ordering from "../cmp/Ordering.js";
+import { deepCopy, shallowCopy } from "../lib/utils.js";
 import { ResultBase } from "./result.js";
 import type { Ok, Result } from "./types.js";
 
-class Err<T, E> extends ResultBase<T, E> {
+class Err<T = never, E = unknown> extends ResultBase<T, E> {
 	readonly value: E;
 
 	constructor(value: E) {
@@ -92,6 +93,14 @@ class Err<T, E> extends ResultBase<T, E> {
 	}
 
 	*iter(): Iterator<never> {}
+
+	copy(): Err<T, E> {
+		return new Err<T, E>(shallowCopy(this.value));
+	}
+
+	clone(): Err<T, E> {
+		return new Err<T, E>(deepCopy(this.value));
+	}
 
 	cmp(other: Result<T, E>): Ordering {
 		if (other.isOk()) {

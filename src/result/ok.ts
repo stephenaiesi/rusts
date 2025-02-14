@@ -1,8 +1,9 @@
 import Ordering from "../cmp/Ordering.js";
+import { deepCopy, shallowCopy } from "../lib/utils.js";
 import { ResultBase } from "./result";
 import type { Err, Result } from "./types";
 
-class Ok<T, E = unknown> extends ResultBase<T, E> {
+class Ok<T, E = never> extends ResultBase<T, E> {
 	readonly value: T;
 
 	constructor(value: T) {
@@ -95,6 +96,14 @@ class Ok<T, E = unknown> extends ResultBase<T, E> {
 		yield this.value;
 	}
 
+	copy(): Ok<T, E> {
+		return new Ok<T, E>(shallowCopy(this.value));
+	}
+
+	clone(): Ok<T, E> {
+		return new Ok<T, E>(deepCopy(this.value));
+	}
+
 	cmp(other: Result<T, E>): Ordering {
 		if (other.isErr()) {
 			return Ordering.Less;
@@ -107,6 +116,6 @@ class Ok<T, E = unknown> extends ResultBase<T, E> {
 	}
 }
 
-// const ok = <T>(value: T) => new Ok<T>(value);
+const ok = <T, E = never>(value: T) => new Ok<T, E>(value);
 
-export { Ok };
+export { Ok, ok };

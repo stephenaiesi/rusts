@@ -48,6 +48,12 @@ abstract class ResultBase<T, E> implements Comparable<Result<T, E>> {
 	abstract iter(): Iterator<T>;
 
 	/******************************************************************
+	 *	Copying & Cloning
+	 ******************************************************************/
+	abstract copy(): Result<T, E>;
+	abstract clone(): Result<T, E>;
+
+	/******************************************************************
 	 *	Comparison Operations
 	 ******************************************************************/
 	abstract cmp(this: Result<T, E>, other: Result<T, E>): Ordering;
@@ -93,16 +99,6 @@ abstract class ResultBase<T, E> implements Comparable<Result<T, E>> {
 		if (this.gt(max)) return max;
 		return this;
 	}
-
-	// abstract flatten(this: Result<Result<T, E>, E>): Result<T, E>;
-	// // abstract ok(): Option<T>;
-	// // abstract err(): Option<E>;
-	// // abstract transpose(this: Result<Option<T>, E>): Option<Result<T, E>>;
-
-	// abstract unwrapOr(fallback: T): T;
-	// abstract unwrapOrElse(fn: (e: E) => T): T;
-	// abstract copy(): Result<T, E>;
-	// abstract clone(): Result<T, E>;
 }
 
 export { ResultBase };
