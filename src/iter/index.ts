@@ -107,8 +107,8 @@ export class IterIter<T> extends Iter<T> {
 
 	constructor(iter: Iterable<T> | Iterator<T> | (() => Generator<T>)) {
 		super();
-		if (iter instanceof Iterator) {
-			this.iter = iter;
+		if (typeof (iter as Iterator<T>).next === "function") {
+			this.iter = iter as Iterator<T>;
 		} else if (typeof iter === "function") {
 			this.iter = (iter as () => Generator<T>)();
 		} else {
