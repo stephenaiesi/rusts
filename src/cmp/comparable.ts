@@ -1,4 +1,4 @@
-import type { Option } from "../option/option.js";
+import type { Option } from "../option/index.js";
 import { Ordering } from "./Ordering.js";
 
 import type { AbsConstructor } from "../types/index.js";
