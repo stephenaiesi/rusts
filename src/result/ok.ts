@@ -1,9 +1,11 @@
 import Ordering from "../cmp/Ordering.js";
 import { deepCopy, shallowCopy } from "../lib/utils.js";
-import { ResultBase } from "./result";
-import type { Err, Result } from "./types";
+import { ResultBase } from "./result.js";
+import type { Err, Result } from "./types.js";
 
 class Ok<T, E = never> extends ResultBase<T, E> {
+	readonly kind = "ok";
+
 	readonly value: T;
 
 	constructor(value: T) {
@@ -116,6 +118,6 @@ class Ok<T, E = never> extends ResultBase<T, E> {
 	}
 }
 
-const ok = <T, E = never>(value: T) => new Ok<T, E>(value);
+const ok = <T, E = never>(value: T = null as T) => new Ok<T, E>(value);
 
 export { Ok, ok };
