@@ -1,3 +1,4 @@
-export * from "./result";
-export * from "./ok";
-export * from "./err";
+export * from "./result.js";
+export * from "./ok.js";
+export * from "./err.js";
+export type * from "./types.js";
