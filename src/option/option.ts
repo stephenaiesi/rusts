@@ -1,11 +1,9 @@
 import { type Comparable, Ordering } from "../cmp/index.js";
-import type { None } from "./none.js";
-// import type { Result } from "../result/result";
-import type { Some } from "./some.js";
-
-type Option<T> = Some<T> | None<T>;
+import type { None, Option, Some } from "./types.js";
 
 abstract class OptionBase<T> implements Comparable<Option<T>> {
+	abstract kind: "some" | "none";
+
 	protected constructor() {}
 
 	/***************************************************************************
@@ -138,5 +136,3 @@ abstract class OptionBase<T> implements Comparable<Option<T>> {
 }
 
 export { OptionBase };
-
-export type { Option };

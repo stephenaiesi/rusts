@@ -2,12 +2,14 @@ import { Ordering } from "../cmp/index.js";
 import { deepCopy, shallowCopy } from "../lib/utils.js";
 import { None } from "./none.js";
 import { OptionBase } from "./option.js";
-import type { Option } from "./option.js";
+import type { Option } from "./types.js";
 
 // import type { Result } from "../result/result";
 // import { ok } from "../result/ok";
 
 class Some<T> extends OptionBase<T> {
+	readonly kind = "some";
+
 	value: T;
 
 	constructor(value: T) {

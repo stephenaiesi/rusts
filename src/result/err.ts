@@ -4,6 +4,8 @@ import { ResultBase } from "./result.js";
 import type { Ok, Result } from "./types.js";
 
 class Err<T = never, E = unknown> extends ResultBase<T, E> {
+	readonly kind = "err";
+
 	readonly value: E;
 
 	constructor(value: E) {
@@ -76,7 +78,7 @@ class Err<T = never, E = unknown> extends ResultBase<T, E> {
 		return new Err(fn(this.value));
 	}
 
-	and<U>(_other: Result<U, E>): Err<U, E> {
+	and<U, Other extends Result<U, E>>(_other: Other): Err<U, E> {
 		return this as unknown as Err<U, E>;
 	}
 

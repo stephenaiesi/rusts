@@ -4,6 +4,8 @@ import type { Comparable } from "../cmp/comparable.js";
 import type { Err, Ok, Result } from "./types.js";
 
 abstract class ResultBase<T, E> implements Comparable<Result<T, E>> {
+	abstract kind: "ok" | "err";
+
 	abstract readonly value: T | E;
 
 	/***************************************************************************
