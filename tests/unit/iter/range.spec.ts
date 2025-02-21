@@ -123,4 +123,13 @@ describe("Range", () => {
 		expect(mapped.next()).toEqual(Some.of(4));
 		expect(mapped.next()).toEqual(None.instance);
 	});
+
+	test("Range.fold()", () => {
+		const range = new Range(0, 3);
+		const folded = range.fold((acc, n) => acc + n, 0);
+		expect(folded).toEqual(3);
+
+		const folded2 = Range.from(0, 3).fold((acc, n) => acc + n, 1);
+		expect(folded2).toEqual(4);
+	});
 });
