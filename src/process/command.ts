@@ -18,11 +18,11 @@ class Command {
 		gid: undefined as number | undefined,
 	};
 
-	preExecCallbacks: (() => void)[] = [];
+	private preExecCallbacks: (() => void)[] = [];
 
 	constructor(private readonly program: string) {}
 
-	static new(program: string): Command {
+	public static new(program: string): Command {
 		return new Command(program);
 	}
 
