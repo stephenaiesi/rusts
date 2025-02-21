@@ -110,6 +110,10 @@ abstract class Iter<T> implements Iterable<T> {
 
 		return initial;
 	}
+
+	collect(): T[] {
+		return [...this];
+	}
 }
 
 export class IterIter<T> extends Iter<T> {
