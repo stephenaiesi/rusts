@@ -100,6 +100,16 @@ abstract class Iter<T> implements Iterable<T> {
 	map<U>(fn: (t: T) => U): Mapped<T, U> {
 		return new Mapped(this, fn);
 	}
+
+	fold<U>(fn: (acc: U, t: T) => U, acc: U): U {
+		let initial = acc;
+
+		for (const t of this) {
+			initial = fn(initial, t);
+		}
+
+		return initial;
+	}
 }
 
 export class IterIter<T> extends Iter<T> {
