@@ -7,8 +7,6 @@ import type { Option } from "./types.js";
 // import { ok } from "../result/ok";
 
 class None<T = never> extends OptionBase<T> {
-	readonly kind = "none";
-
 	public static readonly instance: None = new None();
 
 	static of<T = never>(): None<T> {

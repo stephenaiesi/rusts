@@ -2,8 +2,6 @@ import { type Comparable, Ordering } from "../cmp/index.js";
 import type { None, Option, Some } from "./types.js";
 
 abstract class OptionBase<T> implements Comparable<Option<T>> {
-	abstract kind: "some" | "none";
-
 	protected constructor() {}
 
 	/***************************************************************************

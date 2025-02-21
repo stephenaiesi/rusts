@@ -8,8 +8,6 @@ import type { Option } from "./types.js";
 // import { ok } from "../result/ok";
 
 class Some<T> extends OptionBase<T> {
-	readonly kind = "some";
-
 	value: T;
 
 	constructor(value: T) {
