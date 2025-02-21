@@ -132,4 +132,12 @@ describe("Range", () => {
 		const folded2 = Range.from(0, 3).fold((acc, n) => acc + n, 1);
 		expect(folded2).toEqual(4);
 	});
+
+	test("Range.collect()", () => {
+		expect(Range.from(0, 3).collect()).toEqual([0, 1, 2]);
+
+		expect(Range.from(0, 20, 2).collect()).toEqual([
+			0, 2, 4, 6, 8, 10, 12, 14, 16, 18,
+		]);
+	});
 });
