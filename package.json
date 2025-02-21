@@ -26,6 +26,10 @@
 		"./iter": {
 			"main": "./dist/iter/index.js",
 			"types": "./dist/iter/index.d.ts"
+		},
+		"./process": {
+			"main": "./dist/process/index.js",
+			"types": "./dist/process/index.d.ts"
 		}
 	},
 	"scripts": {

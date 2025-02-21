@@ -11,7 +11,7 @@ export default defineConfig({
 		coverage: {
 			provider: "v8",
 
-			include: ["src/option/**/*.ts", "src/result/**/*.ts", "src/iter/**/*.ts"],
+			include: ["src/option/**/*.ts", "src/result/**/*.ts", "src/iter/**/*.ts", "src/process/**/*.ts"],
 
 			exclude: ["src/**/types/**/*.ts", "src/**/types.ts"],
 
