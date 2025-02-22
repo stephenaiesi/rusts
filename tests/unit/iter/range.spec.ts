@@ -140,4 +140,8 @@ describe("Range", () => {
 			0, 2, 4, 6, 8, 10, 12, 14, 16, 18,
 		]);
 	});
+
+	test("Range.groupBy()", () => {
+		expect(Range.from(0, 3).groupBy(2).collect()).toEqual([[0, 1], [2]]);
+	});
 });
