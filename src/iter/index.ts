@@ -114,6 +114,22 @@ abstract class Iter<T> implements Iterable<T> {
 	collect(): T[] {
 		return [...this];
 	}
+
+	groupBy(n: number): Iter<T[]> {
+		const self = this;
+
+		return Iter.of<T[]>(function* () {
+			while (true) {
+				const chunk = self.nextChunk(n);
+				if (chunk.isOk()) {
+					yield chunk.unwrap();
+				} else {
+					yield chunk.unwrapErr();
+					break;
+				}
+			}
+		});
+	}
 }
 
 export class IterIter<T> extends Iter<T> {
