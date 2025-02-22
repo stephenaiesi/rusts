@@ -17,9 +17,13 @@ class Command {
 
 	private environment: Environment = {};
 
-	private options: Options = {
+	private readonly defaultOpts: Options = {
 		cwd: process.cwd(),
 		inheritEnv: true,
+	};
+
+	private options: Options = {
+		...this.defaultOpts,
 	};
 
 	private preExecCallbacks: (() => void)[] = [];
@@ -72,6 +76,16 @@ class Command {
 
 	public opts(opts: Partial<Options>): this {
 		this.options = { ...this.options, ...opts };
+		return this;
+	}
+
+	public optRemove<K extends keyof Options>(key: K): this {
+		delete this.options[key];
+		return this;
+	}
+
+	public optsClear(): this {
+		this.options = { ...this.defaultOpts };
 		return this;
 	}
 
@@ -139,7 +153,6 @@ class Command {
 		const self = this;
 
 		return Iter.of<ObjectEntry<Options>>(function* () {
-			//
 			for (const key in self.options) {
 				yield [key as keyof Options, self.options[key as keyof Options]];
 			}
@@ -173,6 +186,8 @@ class Command {
 		return undefined;
 	}
 }
+
+export type { Options };
 
 export { Command };
 
