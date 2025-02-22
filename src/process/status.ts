@@ -4,15 +4,18 @@ import { Err, Ok, type Result } from "../result/index.js";
 class ExitStatus {
 	public code: number | null;
 	public signal: NodeJS.Signals | null;
-	public error: Error | undefined;
+	public error?: Error;
 
 	constructor(public result: ReturnType<typeof spawnSync>) {
 		this.code = this.result.status;
 		this.signal = this.result.signal;
-		this.error = this.result.error;
+
+		if (result.error !== undefined) this.error = this.result.error;
+		else if (this.code !== null && this.code !== 0)
+			this.error = new Error(`Process exited with code ${this.code}`);
 	}
 
-	public exit_ok(): Result<null, ExitStatusError> {
+	public exitOk(): Result<null, ExitStatusError> {
 		return this.error ? new Err(new ExitStatusError(this)) : new Ok(null);
 	}
 }
@@ -21,19 +24,16 @@ class ExitStatusError extends Error {
 	private status: ExitStatus;
 
 	constructor(status: ExitStatus) {
-		super();
-
-		this.status = status;
-
-		if (status.error) {
-			this.name = status.error.name;
-			this.message = status.error.message;
-			this.stack = status.error.stack;
-			this.cause = status.error.cause;
-		} else {
-			this.name = "ExitStatusError";
-			this.message = `Process exited with code ${this.code}`;
+		if (status.error === undefined) {
+			throw new Error(
+				"ExitStatusError must be constructed with an a failed ExitStatus",
+			);
 		}
+
+		super(status.error.message, { cause: status.error.cause });
+		this.status = status;
+		this.name = status.error.name;
+		this.stack = status.error.stack;
 	}
 
 	code(): number | null {
