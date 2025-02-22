@@ -1,21 +1,25 @@
-import { spawn, spawnSync } from "node:child_process";
+import { type SpawnOptions, spawn, spawnSync } from "node:child_process";
 import { Iter } from "../iter/index.js";
 import { None, type Option, Some } from "../option/index.js";
 import { Err, Ok, type Result } from "../result/index.js";
 import { Output } from "./output.js";
 import { ExitStatus } from "./status.js";
 
+type ObjectEntry<T> = [keyof T, T[keyof T]];
+
+type Options = Omit<Parameters<typeof spawn>[2], "env"> & {
+	inheritEnv: boolean;
+};
+type Environment = Record<string, string | null>;
+
 class Command {
 	private arguments: string[] = [];
 
-	private inheritEnv = true;
+	private environment: Environment = {};
 
-	private environment: Record<string, string | null> = {};
-
-	private opts = {
+	private options: Options = {
 		cwd: process.cwd(),
-		uid: undefined as number | undefined,
-		gid: undefined as number | undefined,
+		inheritEnv: true,
 	};
 
 	private preExecCallbacks: (() => void)[] = [];
@@ -57,7 +61,17 @@ class Command {
 
 	public envClear(): this {
 		this.environment = {};
-		this.inheritEnv = false;
+		this.options.inheritEnv = false;
+		return this;
+	}
+
+	public opt<K extends keyof Options>(key: K, val: Options[K]): this {
+		this.options[key] = val;
+		return this;
+	}
+
+	public opts(opts: Partial<Options>): this {
+		this.options = { ...this.options, ...opts };
 		return this;
 	}
 
@@ -71,11 +85,11 @@ class Command {
 		return child;
 	}
 
-	private getSpawnOpts() {
+	private getSpawnOpts(): SpawnOptions {
 		return {
-			...this.opts,
+			...this.options,
 			env: {
-				...(this.inheritEnv && process.env),
+				...(this.options.inheritEnv && process.env),
 				...this.getEnvs().fold(
 					(acc, [key, val]) => {
 						if (val.isSome()) acc[key] = val.unwrap();
@@ -121,17 +135,28 @@ class Command {
 		});
 	}
 
-	public getCurrentDir(): string {
-		return this.opts.cwd;
+	public getOpts(): Iter<ObjectEntry<Options>> {
+		const self = this;
+
+		return Iter.of<ObjectEntry<Options>>(function* () {
+			//
+			for (const key in self.options) {
+				yield [key as keyof Options, self.options[key as keyof Options]];
+			}
+		});
+	}
+
+	public getCurrentDir() {
+		return this.options.cwd;
 	}
 
 	public uid(id: number): this {
-		this.opts.uid = id;
+		this.options.uid = id;
 		return this;
 	}
 
 	public gid(id: number): this {
-		this.opts.gid = id;
+		this.options.gid = id;
 		return this;
 	}
 
