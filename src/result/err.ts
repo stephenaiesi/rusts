@@ -116,6 +116,6 @@ class Err<T = never, E = unknown> extends ResultBase<T, E> {
 	}
 }
 
-// const err = <E>(e: E): Err<E> => new Err(e);
+const err = <E>(e: E): Err<E> => new Err(e);
 
-export { Err };
+export { Err, err };
