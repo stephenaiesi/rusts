@@ -1,5 +1,5 @@
 import { Ordering } from "../../../src/cmp/Ordering";
-import { Err } from "../../../src/result/err";
+import { Err, err } from "../../../src/result/err";
 import { Ok } from "../../../src/result/ok";
 
 describe("Err", () => {
@@ -10,6 +10,12 @@ describe("Err", () => {
 			const a = new Err("Oh no!");
 			expect(a).toBeInstanceOf(Err);
 			expect(a).not.toBe(new Err("Oh no!"));
+		});
+
+		test("err() factory function", () => {
+			const e = err("Oh no!");
+			expect(e).toBeInstanceOf(Err);
+			expect(e.unwrapErr()).toBe("Oh no!");
 		});
 	});
 
