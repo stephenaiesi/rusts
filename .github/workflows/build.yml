@@ -3,7 +3,7 @@ name: Build and Deploy to `build` Branch
 on:
   push:
     branches:
-      - main  
+      - main  # Runs every time you push to main
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 18  # Adjust based on your project
           cache: npm
 
       - name: Install dependencies
@@ -31,14 +31,18 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Fetch the existing `build` branch to preserve history
+          # Ensure the build branch exists
           git fetch origin build || true
-          git checkout build || git checkout -b build
+          if git show-ref --verify --quiet refs/heads/build; then
+            git checkout build
+            git merge --ff-only main || true
+          else
+            git checkout -b build
+          fi
 
-          # Merge latest main changes
-          git merge --ff-only main || true
+          # Force add dist/ even if in .gitignore
+          git add -f dist/
 
-          # Commit the built files
-          git add dist/
+          # Commit and push changes
           git commit -m "Build: Update dist files" || true
           git push origin build
