@@ -33,7 +33,7 @@
 		}
 	},
 	"scripts": {
-		"prepack": "npm run build",
+		"prepare": "npm run build",
 		"clean": "rimraf ./dist",
 		"format": "npx biome format src tests",
 		"format:fix": "npm run format -- --write",
