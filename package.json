@@ -23,6 +23,10 @@
 			"main": "./dist/option/index.js",
 			"types": "./dist/option/index.d.ts"
 		},
+		"./result": {
+			"main": "./dist/result/index.js",
+			"types": "./dist/result/index.d.ts"
+		},
 		"./iter": {
 			"main": "./dist/iter/index.js",
 			"types": "./dist/iter/index.d.ts"
