@@ -12,27 +12,27 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"main": "./dist/index.js",
+			"import": "./dist/index.js",
 			"types": "./dist/index.d.ts"
 		},
 		"./compare": {
-			"main": "./dist/cmp/index.js",
+			"import": "./dist/cmp/index.js",
 			"types": "./dist/cmp/index.d.ts"
 		},
 		"./option": {
-			"main": "./dist/option/index.js",
+			"import": "./dist/option/index.js",
 			"types": "./dist/option/index.d.ts"
 		},
 		"./result": {
-			"main": "./dist/result/index.js",
+			"import": "./dist/result/index.js",
 			"types": "./dist/result/index.d.ts"
 		},
 		"./iter": {
-			"main": "./dist/iter/index.js",
+			"import": "./dist/iter/index.js",
 			"types": "./dist/iter/index.d.ts"
 		},
 		"./process": {
-			"main": "./dist/process/index.js",
+			"import": "./dist/process/index.js",
 			"types": "./dist/process/index.d.ts"
 		}
 	},
