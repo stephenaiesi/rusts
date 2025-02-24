@@ -10,16 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout `dist` branch (or create it)
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensure full repo history for merging
+          fetch-depth: 0  # Ensure full repo history
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: npm
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch latest branches
+        run: git fetch origin
+
+      - name: Create or switch to `dist` branch
+        run: |
+          if git ls-remote --exit-code --heads origin dist; then
+            git checkout dist
+          else
+            git checkout -b dist
+          fi
 
       - name: Install dependencies
         run: npm install
@@ -27,29 +37,8 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Deploy to `dist` branch
+      - name: Commit and Push to `dist` branch
         run: |
-          # Configure Git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Authenticate with GitHub token
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-          # Check if the `dist` branch exists
-          if git ls-remote --exit-code --heads origin dist; then
-            git checkout dist
-            git merge --ff-only main || true
-          else
-            git checkout -b dist
-          fi
-
-          # Copy dist files from main branch
-          git checkout main -- dist/
-
-          # Force-add dist/ even if it's in .gitignore
           git add -f dist/
-
-          # Commit and push changes
           git commit -m "Build: Update dist files" || echo "No changes to commit"
-          git push origin dist
+          git push origin dist --force
