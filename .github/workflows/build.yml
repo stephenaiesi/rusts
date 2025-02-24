@@ -1,9 +1,9 @@
-name: Build and Deploy to `build` Branch
+name: Build and Deploy to `dist` Branch
 
 on:
   push:
     branches:
-      - main  # Runs every time you push to main
+      - main  # Runs every time main is updated
 
 jobs:
   build:
@@ -13,12 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensures we get full history for merging
+          fetch-depth: 0  # Ensure full repo history for merging
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18  # Adjust based on your project
+          node-version: 18
           cache: npm
 
       - name: Install dependencies
@@ -27,27 +27,29 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Deploy to `build` branch
+      - name: Deploy to `dist` branch
         run: |
           # Configure Git
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Authenticate using GitHub token
+          # Authenticate with GitHub token
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
-          # Ensure the build branch exists
-          git fetch origin build || true
-          if git show-ref --verify --quiet refs/heads/build; then
-            git checkout build
+          # Check if the `dist` branch exists
+          if git ls-remote --exit-code --heads origin dist; then
+            git checkout dist
             git merge --ff-only main || true
           else
-            git checkout -b build
+            git checkout -b dist
           fi
 
-          # Force add dist/ even if in .gitignore
+          # Copy dist files from main branch
+          git checkout main -- dist/
+
+          # Force-add dist/ even if it's in .gitignore
           git add -f dist/
 
           # Commit and push changes
-          git commit -m "Build: Update dist files" || true
-          git push origin build
+          git commit -m "Build: Update dist files" || echo "No changes to commit"
+          git push origin dist
