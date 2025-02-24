@@ -1,0 +1,34 @@
+import Ordering from "../cmp/Ordering.js";
+import { ResultBase } from "./result.js";
+import type { Err, Result } from "./types.js";
+declare class Ok<T, E = never> extends ResultBase<T, E> {
+    readonly kind = "ok";
+    readonly value: T;
+    constructor(value: T);
+    isOk(): this is Ok<T, E>;
+    isOkAnd(predicate: (t: T) => boolean): boolean;
+    isErr(): this is Err<T, E>;
+    isErrAnd(_predicate: (e: E) => boolean): boolean;
+    peek(fn: (t: T) => void): this;
+    peekErr(_fn: (e: E) => void): this;
+    expect(_msg: string): T;
+    unwrap(): T;
+    unwrapOr(_fallback: T): T;
+    unwrapOrElse(_fn: (e: E) => T): T;
+    expectErr(msg: string): never;
+    unwrapErr(): never;
+    map<U>(fn: (t: T) => U): Ok<U, E>;
+    mapOr<U>(_fallback: U, fn: (t: T) => U): U;
+    mapOrElse<U>(_fallback: (e: never) => U, fn: (t: T) => U): U;
+    mapErr<F>(_fn: (e: E) => F): Ok<T, F>;
+    and<U, Rhs extends Result<U, E>>(other: Rhs): Rhs;
+    andThen<U, Other extends Result<U, E>>(fn: (t: T) => Other): Other;
+    or<F>(_other: Result<T, F>): Ok<T, F>;
+    orElse<F>(_fn: (e: never) => Result<T, F>): Result<T, F>;
+    iter(): Iterator<T>;
+    copy(): Ok<T, E>;
+    clone(): Ok<T, E>;
+    cmp(other: Result<T, E>): Ordering;
+}
+declare const ok: <T, E = never>(value?: T) => Ok<T, E>;
+export { Ok, ok };

@@ -1,0 +1,47 @@
+import { spawn } from "node:child_process";
+import { Iter } from "../iter/index.js";
+import { type Option } from "../option/index.js";
+import { type Result } from "../result/index.js";
+import { Output } from "./output.js";
+import { ExitStatus } from "./status.js";
+type ObjectEntry<T> = [keyof T, T[keyof T]];
+type Options = Omit<Parameters<typeof spawn>[2], "env"> & {
+    inheritEnv: boolean;
+};
+declare class Command {
+    private readonly program;
+    private arguments;
+    private environment;
+    private readonly defaultOpts;
+    private options;
+    private preExecCallbacks;
+    constructor(program: string);
+    static new(program: string): Command;
+    arg(arg: string): this;
+    args(args: Iterable<string>): this;
+    env(key: string, val: string): this;
+    envs(envs: Record<string, string>): this;
+    envRemove(key: string): this;
+    envClear(): this;
+    opt<K extends keyof Options>(key: K, val: Options[K]): this;
+    opts(opts: Partial<Options>): this;
+    optRemove<K extends keyof Options>(key: K): this;
+    optsClear(): this;
+    spawn(): import("child_process").ChildProcess;
+    spawnSync(): import("child_process").SpawnSyncReturns<Buffer<ArrayBufferLike>>;
+    private getSpawnOpts;
+    output(): Output;
+    status(): Result<ExitStatus, Error>;
+    getProgram(): string;
+    getArgs(): Iter<string>;
+    getEnvs(): Iter<[string, Option<string>]>;
+    getOpts(): Iter<ObjectEntry<Options>>;
+    getCurrentDir(): string | import("url").URL | undefined;
+    uid(id: number): this;
+    gid(id: number): this;
+    preExec(cb: () => void): void;
+    exec(): Error | undefined;
+}
+export type { Options };
+export { Command };
+export default Command;

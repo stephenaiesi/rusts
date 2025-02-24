@@ -1,0 +1,34 @@
+import Ordering from "../cmp/Ordering.js";
+import { ResultBase } from "./result.js";
+import type { Ok, Result } from "./types.js";
+declare class Err<T = never, E = unknown> extends ResultBase<T, E> {
+    readonly kind = "err";
+    readonly value: E;
+    constructor(value: E);
+    isOk(): this is Ok<T, E>;
+    isOkAnd(_predicate: (t: never) => boolean): boolean;
+    isErr(): this is Err<T, E>;
+    isErrAnd(predicate: (e: E) => boolean): boolean;
+    peek(_fn: (e: never) => void): this;
+    peekErr(fn: (e: E) => void): this;
+    expect(msg: string): never;
+    unwrap(): never;
+    unwrapOr(fallback: T): T;
+    unwrapOrElse(fn: (e: E) => T): T;
+    expectErr(_msg: string): E;
+    unwrapErr(): E;
+    map<U>(_fn: (t: never) => U): Err<U, E>;
+    mapOr<U>(fallback: U, _fn: (t: never) => U): U;
+    mapOrElse<U>(fallback: (e: E) => U, _fn: (t: never) => U): U;
+    mapErr<U>(fn: (e: E) => U): Err<T, U>;
+    and<U, Other extends Result<U, E>>(_other: Other): Err<U, E>;
+    andThen<U>(_fn: (t: never) => Result<U, E>): Err<U, E>;
+    or<F, Rhs extends Result<T, F>>(other: Rhs): Rhs;
+    orElse<F, Other extends Result<T, F>>(fn: (e: E) => Other): Other;
+    iter(): Iterator<never>;
+    copy(): Err<T, E>;
+    clone(): Err<T, E>;
+    cmp(other: Result<T, E>): Ordering;
+}
+declare const err: <E>(e: E) => Err<E>;
+export { Err, err };

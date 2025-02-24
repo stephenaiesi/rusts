@@ -1,0 +1,37 @@
+import Ordering from "../cmp/Ordering.js";
+import { OptionBase } from "./option.js";
+import { Some } from "./some.js";
+import type { Option } from "./types.js";
+declare class None<T = never> extends OptionBase<T> {
+    static readonly instance: None;
+    static of<T = never>(): None<T>;
+    isSome<T>(): this is Some<T>;
+    isSomeAnd<T>(_predicate: (t: T) => boolean): boolean;
+    isNone(): this is None<T>;
+    isNoneOr(_predicate: (t: T) => boolean): boolean;
+    expect(msg: string): never;
+    unwrap(): never;
+    unwrapOr<T>(fallback: T): T;
+    unwrapOrElse<T>(fn: () => T): T;
+    peek(_fn: (t: T) => void): this;
+    map<U>(_fn: (t: T) => U): None<U>;
+    mapOr<U>(fallback: U, _fn: (t: T) => U): U;
+    mapOrElse<U>(fallback: () => U, _fn: (t: T) => U): U;
+    filter(_predicate: (t: T) => boolean): this;
+    flatten<U, Inner extends Option<U>>(this: Option<Inner>): Inner;
+    zip<U>(_other: Option<U>): Option<[T, U]>;
+    zipWith<U, R>(_other: Option<U>, _fn: (t: T, u: U) => R): None<R>;
+    unzip<A, B>(this: Option<[A, B]>): [Option<A>, Option<B>];
+    and<U>(_other: Option<U>): None<U>;
+    andThen<U>(_fn: (t: T) => Option<U>): None<U>;
+    or<U, Rhs extends Option<U>>(other: Rhs): Rhs;
+    orElse<T, Rhs extends Option<T>>(fn: () => Rhs): Rhs;
+    xor<Rhs extends Option<T>>(other: Rhs): Option<T>;
+    iter(): Iterator<never>;
+    inserted<U>(u: U): Some<U>;
+    copy(): None<T>;
+    clone(): None<T>;
+    cmp<T>(this: Option<T>, other: Option<T>): Ordering;
+}
+declare const none: None<never>;
+export { None, none };
