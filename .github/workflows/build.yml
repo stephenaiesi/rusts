@@ -1,44 +1,44 @@
-name: Build and Deploy to `dist` Branch
+name: Deploy to dist branch
 
 on:
   push:
     branches:
-      - main  # Runs every time main is updated
+      - main  # Trigger this when there's a push to the main branch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout `dist` branch (or create it)
+      # Checkout the main branch (to get the latest changes)
+      - name: Checkout main branch
         uses: actions/checkout@v3
+
+      # Checkout the dist branch to push the built files
+      - name: Checkout dist branch
+        run: git fetch origin dist:dist && git checkout dist
+
+      # Set up Node.js and install dependencies
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          fetch-depth: 0  # Ensure full repo history
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Fetch latest branches
-        run: git fetch origin
-
-      - name: Create or switch to `dist` branch
-        run: |
-          if git ls-remote --exit-code --heads origin dist; then
-            git checkout dist
-          else
-            git checkout -b dist
-          fi
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build package
+      # Build the project to generate dist files
+      - name: Build project
         run: npm run build
 
-      - name: Commit and Push to `dist` branch
+      # Add dist directory to git
+      - name: Add dist files
         run: |
-          git add -f dist/
-          git commit -m "Build: Update dist files" || echo "No changes to commit"
-          git push origin dist --force
+          git add dist/
+          git commit -m "Deploy new dist files"
+
+      # Push changes to the dist branch
+      - name: Push dist branch
+        run: git push origin dist --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
