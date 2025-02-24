@@ -1,0 +1,44 @@
+name: Build and Deploy to `build` Branch
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build package
+        run: npm run build
+
+      - name: Deploy to `build` branch
+        run: |
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch the existing `build` branch to preserve history
+          git fetch origin build || true
+          git checkout build || git checkout -b build
+
+          # Merge latest main changes
+          git merge --ff-only main || true
+
+          # Commit the built files
+          git add dist/
+          git commit -m "Build: Update dist files" || true
+          git push origin build

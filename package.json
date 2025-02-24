@@ -37,7 +37,6 @@
 		}
 	},
 	"scripts": {
-		"prepare": "npm run build",
 		"clean": "rimraf ./dist",
 		"format": "npx biome format src tests",
 		"format:fix": "npm run format -- --write",
@@ -53,8 +52,7 @@
 		"test": "npm run vitest -- --run",
 		"test:unit": "npm run test -- tests/**/*.spec.ts",
 		"test:func": "npm run test -- tests/**/*.test.ts",
-		"build:ts": "npx tsc -p src/tsconfig.json",
-		"build": "npx concurrently 'npm:build:*'",
+		"build": "npx tsc -p src/tsconfig.json",
 		"watch:ts": "npx tsc -p src/tsconfig.dev.json --watch",
 		"watch:tests": "npm run vitest -- --watch --ui",
 		"docs:build": "npx typedoc",
